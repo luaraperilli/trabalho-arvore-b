@@ -13,24 +13,43 @@ class noh:
 	# Quando essa função é chamada o arquivo é lido e as chaves e os filhos são preenchidos
 	def carrega_arquivo(self, nome_arquivo):
 		print("Lendo: ", nome_arquivo)
-		self.carregado = True	# Define a flag carregado como True para indicar que o nó foi carregado
-		with open(nome_arquivo, "r") as f:
-			linhas = f.readlines()	# Lê todas as linhas do arquivo e armazena em 'linhas'
-			i = 0	# Índice para percorrer as linhas do arquivo
-			while i < len(linhas):	# Loop para percorrer as linhas do arquivo
-				filho_nome = linhas[i].strip()	# Remove espaços em branco
-				i += 1
-				if i < len(linhas):	# Verifica se ainda há linhas para
-					chave = int(linhas[i].strip())
+		self.carregado = True    # Define a flag carregado como True para indicar que o nó foi carregado
+		f = open(nome_arquivo, "r")
+		i = 0
+		for linha in f:
+			linha = linha.strip()  # Remove espaços em branco
+			if i % 2 == 0:
+				linha_atual = linha  # Salva a linha atual como o nome do filho
+			else:
+				# Verifica se a linha é um número (chave)
+				if linha.isdigit():
+					chave = int(linha)
 					self.chaves.append(chave)
-					self.filhos.append(noh(filho_nome))
-					self.folha = False
-				else:  # Se for a última linha do arquivo
-					self.filhos.append(noh(filho_nome))
-				i += 1
+					# Inicializa os filhos como nós vazios, apenas com o nome do arquivo
+					if linha_atual == "None":
+						self.filhos.append(None)
+					else:
+						self.filhos.append(noh(linha_atual))
+						self.folha = False
+				else:
+					print(f"Valor inválido encontrado: {linha}. Ignorando.")
+
+			i += 1  # Incrementa i no final do loop
+
+		# Se a última linha do arquivo for um nome de filho sem chave correspondente
+		if i % 2 == 1:  # Verifica se i é ímpar (última linha é um nome de filho)
+			if linha_atual == "None":
+				self.filhos.append(None)
+			else:
+				self.filhos.append(noh(linha_atual))
+
+		f.close()
+
 		print(f"Chaves lidas: {self.chaves}")
-		print(f"Filhos lidos: {[filho.fileName for filho in self.filhos]}")
-        
+		print(f"Filhos lidos: {[filho.fileName if filho else 'None' for filho in self.filhos]}")
+
+		return None
+
 class arvoreB:
 	def __init__(self, t, filename):
 		self.t = t	# Define o grau mínimo da árvore B
