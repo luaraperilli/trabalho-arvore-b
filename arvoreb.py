@@ -15,26 +15,23 @@ class noh:
 		print("Lendo: ", nome_arquivo)
 		self.carregado = True    # Define a flag carregado como True para indicar que o nó foi carregado
 		f = open(nome_arquivo, "r")
-		i = 0
-		for linha in f:
+		i = 0	# Contador de linhas
+		for linha in f:	# Itera sobre cada linha do arquivo
 			linha = linha.strip()  # Remove espaços em branco
-			if i % 2 == 0:
+			if i % 2 == 0:	# Se a linha é par é o nome de um filho
 				linha_atual = linha  # Salva a linha atual como o nome do filho
-			else:
+			else:	# Se a linha é ímpar é uma chave
 				# Verifica se a linha é um número (chave)
-				if linha.isdigit():
-					chave = int(linha)
-					self.chaves.append(chave)
-					# Inicializa os filhos como nós vazios, apenas com o nome do arquivo
-					if linha_atual == "None":
-						self.filhos.append(None)
+				if linha.isdigit():	
+					chave = int(linha)	# Converte a linha para inteiro
+					self.chaves.append(chave)	# Adiciona a chave à lista de chaves
+					if linha_atual == "None":	# Se o nome do filho for None adiciona à lista de filhos
+						self.filhos.append(None)	
 					else:
-						self.filhos.append(noh(linha_atual))
+						self.filhos.append(noh(linha_atual))	# Cria um novo nó e adiciona à lista de filhos
 						self.folha = False
-				else:
-					print(f"Valor inválido encontrado: {linha}. Ignorando.")
 
-			i += 1  # Incrementa i no final do loop
+			i += 1  # Incrementa i 
 
 		# Se a última linha do arquivo for um nome de filho sem chave correspondente
 		if i % 2 == 1:  # Verifica se i é ímpar (última linha é um nome de filho)
@@ -45,10 +42,7 @@ class noh:
 
 		f.close()
 
-		print(f"Chaves lidas: {self.chaves}")
-		print(f"Filhos lidos: {[filho.fileName if filho else 'None' for filho in self.filhos]}")
-
-		return None
+		return None	 # Retorna None para indicar que a chave não foi encontrada na árvore
 
 class arvoreB:
 	def __init__(self, t, filename):
